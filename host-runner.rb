@@ -17,6 +17,7 @@ class CmdLine < OptionParser
         @options.pass = ""
         @options.debug = false
         @options.type = nil
+        @options.codepage = "cp1251"
 
         banner = "Usage: subtitles.rb [options]"
 
@@ -26,6 +27,13 @@ class CmdLine < OptionParser
         parseargs(ARGV)
         parse!(ARGV)
         validate
+    end
+
+    def set_comp_name(suffix)
+        comp = `hostname`.chomp
+        comp += '-pc' if suffix
+        @options.user = comp
+        @options.password = comp
     end
 
     def parseargs(args)
@@ -41,17 +49,26 @@ class CmdLine < OptionParser
             @options.user = user
         end
 
-        on("-p", "--pass[word] [USER]",
-                "Username") do |user|
+        on("-p", "--pass[word] [PASSWORD]",
+                "Password") do |user|
             @options.user = user
         end
 
         on("-e", "--compname",
                 "Use computer name to authenticate") do |comp|
-            if comp
-                comp = `hostname`.chomp
-                @options.user = comp
-                @options.password = comp
+            set_comp_name(false) if comp
+        end
+
+        on("-E", "--pc",
+                "Use suffix \"-pc\" to computer name to authenticate") do |suffix|
+            set_comp_name(true) if suffix
+        end
+
+        on("-c", "--down-case",
+                "Use downcase") do |down_case|
+            if down_case
+                @options.user.downcase!
+                @options.password.downcase!
             end
         end
 
@@ -61,7 +78,7 @@ class CmdLine < OptionParser
         end
 
         on("-t", "--type [mantis,bz]",
-                "Type of issue tracker (Bugzilla, Mantis) (For now Mantis is  only supported)") do |type|
+                "Type of issue tracker (Bugzilla, Mantis) (For now Mantis is only supported)") do |type|
             @options.type = type.to_sym
             @options.type = :mantis
         end
@@ -91,34 +108,53 @@ class MantisTask
     end
 
     def run
-        @cmd = @task.summary.to_s + ' ' + @task.description.to_s
-        p @cmd
-        if @task.category.casecmp("run-no-wait")
-            @out = `#{@cmd}`
-            @exit_code = $?
+        @cmd = @task.summary.to_s
+        @cmd += ' ' + @task.description.to_s
+        @cmd = Iconv.iconv(@parent.codepage, "UTF-8", @cmd)[0]
+        p @cmd[0,1]
+        if @cmd[0,1] == "@"
+            puts "multicommand!"
+            @cmd = @cmd[1,@cmd.length]
+            @commands = @cmd.split(/\r?\n/)
+        end
+        @commands = [@cmd]
+        @out = ""
+        if @task.category.casecmp("run")
+            @commands.each do |cmd|
+                p cmd if @parent.debug
+                @out += `#{cmd}`
+                @exit_code = $?
+                if @exit_code !=0 
+                    return @exit_code
+                end
+            end
+        elsif @task.category.casecmp("run-no-wait")
         end
     end
 
     def save
         @task.resolution.id, @task.resolution.name = @parent.fixed[:id], @parent.fixed[:name]
         @task.status.id, @task.status.name = @parent.resolved[:id], @parent.resolved[:name]
-        p @task
+        p @task if $DEBUG
         @parent.save_task(self)
     end
 end
 
 class Mantis
     SUPPORTED_API_VERSION = '1.2.3'
-    attr_reader :resolved, :fixed
+    attr_reader :resolved, :fixed, :debug, :codepage
     
     def initialize(cmdLine)
         @obj = MantisConnectPortType.new(cmdLine.options.url)
         @user = cmdLine.options.user
         @pass = cmdLine.options.password
-        
+        @debug = cmdLine.options.debug
+        @codepage = cmdLine.options.codepage
+
         @obj.wiredump_dev = STDERR if $DEBUG
         
         check_version
+        puts "Username #{@user}..." if @debug
         get_status_resolved
         get_resolution_resolved
         get_runner_project
@@ -135,7 +171,7 @@ class Mantis
 
     def get_status_resolved
         statuses = @obj.mc_enum_status(@user, @pass)
-        p statuses
+        p statuses if $DEBUG
         statuses.each do |s|
             if s.name.casecmp("resolved") == 0
                 @resolved = {:id => s.id, :name => "resolved"}
@@ -147,7 +183,7 @@ class Mantis
 
     def get_resolution_resolved
         resolutions = @obj.mc_enum_resolutions(@user, @pass)
-        p resolutions
+        p resolutions if $DEBUG
         resolutions.each do |r|
             if r.name.casecmp("fixed") == 0
                 @fixed = {:id => r.id, :name => "fixed"}
@@ -165,7 +201,7 @@ class Mantis
     def find_runner_project_id(projects)
         projects.each do |p|
             if p.name.casecmp('Runner') == 0
-                puts "Found! #{p.id}"
+                puts "Found \"Runner\"! (ID = #{p.id})" if @debug
                 return p.id
             end
             raise 'Project "Runner" not found'
@@ -208,7 +244,7 @@ class Mantis
     def save_task(task)
         note = IssueNoteData.new()
         note.text = task.out
-        note.text = Iconv.iconv("UTF-8", "cp1251", task.out)
+        note.text = Iconv.iconv("UTF-8", @codepage, task.out)
         @obj.mc_issue_note_add(@user, @pass, task.task.id, note)
         @obj.mc_issue_update(@user, @pass, task.task.id, task.task)
     end
