@@ -111,7 +111,6 @@ class MantisTask
         @cmd = @task.summary.to_s
         @cmd += ' ' + @task.description.to_s
         @cmd = Iconv.iconv(@parent.codepage, "UTF-8", @cmd)[0]
-        p @cmd[0,1]
         if @cmd[0,1] == "@"
             puts "multicommand!"
             @cmd = @cmd[1,@cmd.length]
