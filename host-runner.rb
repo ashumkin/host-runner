@@ -162,7 +162,8 @@ class Mantis
 
     def check_version
         api_version = @obj.mc_version
-        puts "Server API version is #{api_version}"
+        puts "Server #{@obj.proxy.endpoint_url}"
+        puts "API version is #{api_version}"
         if api_version > SUPPORTED_API_VERSION
             puts "OK. Supported"
         end
