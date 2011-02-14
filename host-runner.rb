@@ -29,11 +29,9 @@ class CmdLine < OptionParser
         validate
     end
 
-    def set_comp_name(suffix)
-        comp = `hostname`.chomp
-        comp += '-pc' if suffix
-        @options.user = comp
-        @options.password = comp
+    def set_comp_name_suffix()
+        @options.user += '-pc'
+        @options.password = @options.user
     end
 
     def parseargs(args)
@@ -50,23 +48,24 @@ class CmdLine < OptionParser
         end
 
         on("-p", "--pass[word] [PASSWORD]",
-                "Password") do |user|
-            @options.user = user
+                "Password") do |password|
+            @options.password = password
         end
 
         on("-e", "--compname",
-                "Use computer name to authenticate") do |comp|
-            set_comp_name(false) if comp
+                "Use computer name as username to authenticate") do |e|
+            @options.user = `hostname`.chomp if e
         end
 
         on("-E", "--pc",
-                "Use suffix \"-pc\" to computer name to authenticate") do |suffix|
-            set_comp_name(true) if suffix
+                "Use suffix \"-pc\" to username to authenticate") do |suffix|
+            set_comp_name_suffix() if suffix
         end
 
         on("-c", "--down-case",
                 "Use downcase") do |down_case|
             if down_case
+                p @options
                 @options.user.downcase!
                 @options.password.downcase!
             end
