@@ -4,6 +4,7 @@ require 'optparse'
 require 'ostruct'
 require 'defaultDriver.rb'
 require 'iconv'
+require 'pp'
 
 class CmdLine < OptionParser
     attr_reader :options
@@ -19,7 +20,7 @@ class CmdLine < OptionParser
         @options.type = nil
         @options.codepage = "cp1251"
 
-        banner = "Usage: subtitles.rb [options]"
+        banner = "Usage: host-runner.rb [options]"
 
         separator ""
         separator "Options:"
@@ -203,8 +204,8 @@ class Mantis
                 puts "Found \"Runner\"! (ID = #{p.id})" if @debug
                 return p.id
             end
-            raise 'Project "Runner" not found'
         end
+        raise 'Project "Runner" for user not found'
     end
 
     def get_new_tasks
