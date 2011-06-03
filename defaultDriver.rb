@@ -3,7 +3,7 @@ require 'defaultMappingRegistry.rb'
 require 'soap/rpc/driver'
 
 class MantisConnectPortType < ::SOAP::RPC::Driver
-  DefaultEndpointUrl = "http://localhost:8000/mantisbt/api/soap/mantisconnect.php"
+  DefaultEndpointUrl = "http://localhost/mantisbt/api/soap/mantisconnect.php"
   NsMantisconnect = "http://futureware.biz/mantisconnect"
 
   Methods = [
@@ -341,6 +341,17 @@ class MantisConnectPortType < ::SOAP::RPC::Driver
         :response_style => :rpc, :response_use => :encoded,
         :faults => {} }
     ],
+    [ XSD::QName.new(NsMantisconnect, "mc_project_get_id_from_name"),
+      "http://localhost/mantisbt/api/soap/mantisconnect.php/mc_project_get_id_from_name",
+      "mc_project_get_id_from_name",
+      [ ["in", "username", ["::SOAP::SOAPString"]],
+        ["in", "password", ["::SOAP::SOAPString"]],
+        ["in", "project_name", ["::SOAP::SOAPString"]],
+        ["retval", "return", ["::SOAP::SOAPInteger"]] ],
+      { :request_style =>  :rpc, :request_use =>  :encoded,
+        :response_style => :rpc, :response_use => :encoded,
+        :faults => {} }
+    ],
     [ XSD::QName.new(NsMantisconnect, "mc_project_get_issues"),
       "http://localhost/mantisbt/api/soap/mantisconnect.php/mc_project_get_issues",
       "mc_project_get_issues",
@@ -561,6 +572,17 @@ class MantisConnectPortType < ::SOAP::RPC::Driver
         ["in", "password", ["::SOAP::SOAPString"]],
         ["in", "project_attachment_id", ["::SOAP::SOAPInteger"]],
         ["retval", "return", ["::SOAP::SOAPBoolean"]] ],
+      { :request_style =>  :rpc, :request_use =>  :encoded,
+        :response_style => :rpc, :response_use => :encoded,
+        :faults => {} }
+    ],
+    [ XSD::QName.new(NsMantisconnect, "mc_project_get_all_subprojects"),
+      "http://localhost/mantisbt/api/soap/mantisconnect.php/mc_project_get_all_subprojects",
+      "mc_project_get_all_subprojects",
+      [ ["in", "username", ["::SOAP::SOAPString"]],
+        ["in", "password", ["::SOAP::SOAPString"]],
+        ["in", "project_id", ["::SOAP::SOAPInteger"]],
+        ["retval", "return", ["StringArray", "http://futureware.biz/mantisconnect", "StringArray"]] ],
       { :request_style =>  :rpc, :request_use =>  :encoded,
         :response_style => :rpc, :response_use => :encoded,
         :faults => {} }

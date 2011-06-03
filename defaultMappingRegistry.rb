@@ -162,7 +162,8 @@ module DefaultMappingRegistry
       ["relationships", ["RelationshipDataArray", XSD::QName.new(nil, "relationships")], [0, 1]],
       ["notes", ["IssueNoteDataArray", XSD::QName.new(nil, "notes")], [0, 1]],
       ["custom_fields", ["CustomFieldValueForIssueDataArray", XSD::QName.new(nil, "custom_fields")], [0, 1]],
-      ["due_date", ["SOAP::SOAPDateTime", XSD::QName.new(nil, "due_date")], [0, 1]]
+      ["due_date", ["SOAP::SOAPDateTime", XSD::QName.new(nil, "due_date")], [0, 1]],
+      ["monitors", ["AccountDataArray", XSD::QName.new(nil, "monitors")], [0, 1]]
     ]
   )
 
@@ -254,7 +255,8 @@ module DefaultMappingRegistry
       ["project_id", ["SOAP::SOAPInteger", XSD::QName.new(nil, "project_id")], [0, 1]],
       ["is_public", ["SOAP::SOAPBoolean", XSD::QName.new(nil, "is_public")], [0, 1]],
       ["name", ["SOAP::SOAPString", XSD::QName.new(nil, "name")], [0, 1]],
-      ["filter_string", ["SOAP::SOAPString", XSD::QName.new(nil, "filter_string")], [0, 1]]
+      ["filter_string", ["SOAP::SOAPString", XSD::QName.new(nil, "filter_string")], [0, 1]],
+      ["url", ["SOAP::SOAPString", XSD::QName.new(nil, "url")], [0, 1]]
     ]
   )
 
@@ -436,7 +438,8 @@ module DefaultMappingRegistry
       ["relationships", ["RelationshipDataArray", XSD::QName.new(nil, "relationships")], [0, 1]],
       ["notes", ["IssueNoteDataArray", XSD::QName.new(nil, "notes")], [0, 1]],
       ["custom_fields", ["CustomFieldValueForIssueDataArray", XSD::QName.new(nil, "custom_fields")], [0, 1]],
-      ["due_date", ["SOAP::SOAPDateTime", XSD::QName.new(nil, "due_date")], [0, 1]]
+      ["due_date", ["SOAP::SOAPDateTime", XSD::QName.new(nil, "due_date")], [0, 1]],
+      ["monitors", ["AccountDataArray", XSD::QName.new(nil, "monitors")], [0, 1]]
     ]
   )
 
@@ -500,7 +503,8 @@ module DefaultMappingRegistry
       ["project_id", ["SOAP::SOAPInteger", XSD::QName.new(nil, "project_id")], [0, 1]],
       ["is_public", ["SOAP::SOAPBoolean", XSD::QName.new(nil, "is_public")], [0, 1]],
       ["name", ["SOAP::SOAPString", XSD::QName.new(nil, "name")], [0, 1]],
-      ["filter_string", ["SOAP::SOAPString", XSD::QName.new(nil, "filter_string")], [0, 1]]
+      ["filter_string", ["SOAP::SOAPString", XSD::QName.new(nil, "filter_string")], [0, 1]],
+      ["url", ["SOAP::SOAPString", XSD::QName.new(nil, "url")], [0, 1]]
     ]
   )
 

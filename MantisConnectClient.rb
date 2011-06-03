@@ -436,6 +436,20 @@ username = password = project_id = project = nil
 puts obj.mc_project_update(username, password, project_id, project)
 
 # SYNOPSIS
+#   mc_project_get_id_from_name(username, password, project_name)
+#
+# ARGS
+#   username        C_String - {http://www.w3.org/2001/XMLSchema}string
+#   password        C_String - {http://www.w3.org/2001/XMLSchema}string
+#   project_name    C_String - {http://www.w3.org/2001/XMLSchema}string
+#
+# RETURNS
+#   v_return        C_Integer - {http://www.w3.org/2001/XMLSchema}integer
+#
+username = password = project_name = nil
+puts obj.mc_project_get_id_from_name(username, password, project_name)
+
+# SYNOPSIS
 #   mc_project_get_issues(username, password, project_id, page_number, per_page)
 #
 # ARGS
@@ -715,6 +729,20 @@ puts obj.mc_project_attachment_add(username, password, project_id, name, title, 
 #
 username = password = project_attachment_id = nil
 puts obj.mc_project_attachment_delete(username, password, project_attachment_id)
+
+# SYNOPSIS
+#   mc_project_get_all_subprojects(username, password, project_id)
+#
+# ARGS
+#   username        C_String - {http://www.w3.org/2001/XMLSchema}string
+#   password        C_String - {http://www.w3.org/2001/XMLSchema}string
+#   project_id      C_Integer - {http://www.w3.org/2001/XMLSchema}integer
+#
+# RETURNS
+#   v_return        StringArray - {http://futureware.biz/mantisconnect}StringArray
+#
+username = password = project_id = nil
+puts obj.mc_project_get_all_subprojects(username, password, project_id)
 
 # SYNOPSIS
 #   mc_filter_get(username, password, project_id)

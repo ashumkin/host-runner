@@ -142,6 +142,7 @@
    <xsd:element name="notes" type="tns:IssueNoteDataArray" minOccurs="0"/>
    <xsd:element name="custom_fields" type="tns:CustomFieldValueForIssueDataArray" minOccurs="0"/>
    <xsd:element name="due_date" type="xsd:dateTime" minOccurs="0"/>
+   <xsd:element name="monitors" type="tns:AccountDataArray" minOccurs="0"/>
   </xsd:all>
  </xsd:complexType>
  <xsd:complexType name="IssueDataArray">
@@ -222,6 +223,7 @@
    <xsd:element name="is_public" type="xsd:boolean" minOccurs="0"/>
    <xsd:element name="name" type="xsd:string" minOccurs="0"/>
    <xsd:element name="filter_string" type="xsd:string" minOccurs="0"/>
+   <xsd:element name="url" type="xsd:string" minOccurs="0"/>
   </xsd:all>
  </xsd:complexType>
  <xsd:complexType name="FilterDataArray">
@@ -467,6 +469,12 @@
   <part name="project" type="tns:ProjectData" /></message>
 <message name="mc_project_updateResponse">
   <part name="return" type="xsd:boolean" /></message>
+<message name="mc_project_get_id_from_nameRequest">
+  <part name="username" type="xsd:string" />
+  <part name="password" type="xsd:string" />
+  <part name="project_name" type="xsd:string" /></message>
+<message name="mc_project_get_id_from_nameResponse">
+  <part name="return" type="xsd:integer" /></message>
 <message name="mc_project_get_issuesRequest">
   <part name="username" type="xsd:string" />
   <part name="password" type="xsd:string" />
@@ -596,6 +604,12 @@
   <part name="project_attachment_id" type="xsd:integer" /></message>
 <message name="mc_project_attachment_deleteResponse">
   <part name="return" type="xsd:boolean" /></message>
+<message name="mc_project_get_all_subprojectsRequest">
+  <part name="username" type="xsd:string" />
+  <part name="password" type="xsd:string" />
+  <part name="project_id" type="xsd:integer" /></message>
+<message name="mc_project_get_all_subprojectsResponse">
+  <part name="return" type="tns:StringArray" /></message>
 <message name="mc_filter_getRequest">
   <part name="username" type="xsd:string" />
   <part name="password" type="xsd:string" />
@@ -789,6 +803,11 @@
     <input message="tns:mc_project_updateRequest"/>
     <output message="tns:mc_project_updateResponse"/>
   </operation>
+  <operation name="mc_project_get_id_from_name">
+    <documentation>Get the id of the project with the specified name.</documentation>
+    <input message="tns:mc_project_get_id_from_nameRequest"/>
+    <output message="tns:mc_project_get_id_from_nameResponse"/>
+  </operation>
   <operation name="mc_project_get_issues">
     <documentation>Get the issues that match the specified project id and paging details.</documentation>
     <input message="tns:mc_project_get_issuesRequest"/>
@@ -883,6 +902,11 @@
     <documentation>Delete the project attachment with the specified id.</documentation>
     <input message="tns:mc_project_attachment_deleteRequest"/>
     <output message="tns:mc_project_attachment_deleteResponse"/>
+  </operation>
+  <operation name="mc_project_get_all_subprojects">
+    <documentation>Get the subprojects ID of a specific project.</documentation>
+    <input message="tns:mc_project_get_all_subprojectsRequest"/>
+    <output message="tns:mc_project_get_all_subprojectsResponse"/>
   </operation>
   <operation name="mc_filter_get">
     <documentation>Get the filters defined for the specified project.</documentation>
@@ -1067,6 +1091,11 @@
     <input><soap:body use="encoded" namespace="http://futureware.biz/mantisconnect" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></input>
     <output><soap:body use="encoded" namespace="http://futureware.biz/mantisconnect" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></output>
   </operation>
+  <operation name="mc_project_get_id_from_name">
+    <soap:operation soapAction="http://localhost/mantisbt/api/soap/mantisconnect.php/mc_project_get_id_from_name" style="rpc"/>
+    <input><soap:body use="encoded" namespace="http://futureware.biz/mantisconnect" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></input>
+    <output><soap:body use="encoded" namespace="http://futureware.biz/mantisconnect" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></output>
+  </operation>
   <operation name="mc_project_get_issues">
     <soap:operation soapAction="http://localhost/mantisbt/api/soap/mantisconnect.php/mc_project_get_issues" style="rpc"/>
     <input><soap:body use="encoded" namespace="http://futureware.biz/mantisconnect" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></input>
@@ -1162,6 +1191,11 @@
     <input><soap:body use="encoded" namespace="http://futureware.biz/mantisconnect" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></input>
     <output><soap:body use="encoded" namespace="http://futureware.biz/mantisconnect" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></output>
   </operation>
+  <operation name="mc_project_get_all_subprojects">
+    <soap:operation soapAction="http://localhost/mantisbt/api/soap/mantisconnect.php/mc_project_get_all_subprojects" style="rpc"/>
+    <input><soap:body use="encoded" namespace="http://futureware.biz/mantisconnect" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></input>
+    <output><soap:body use="encoded" namespace="http://futureware.biz/mantisconnect" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></output>
+  </operation>
   <operation name="mc_filter_get">
     <soap:operation soapAction="http://localhost/mantisbt/api/soap/mantisconnect.php/mc_filter_get" style="rpc"/>
     <input><soap:body use="encoded" namespace="http://futureware.biz/mantisconnect" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/></input>
@@ -1190,7 +1224,7 @@
 </binding>
 <service name="MantisConnect">
   <port name="MantisConnectPort" binding="tns:MantisConnectBinding">
-    <soap:address location="http://localhost:8000/mantisbt/api/soap/mantisconnect.php"/>
+    <soap:address location="http://localhost/mantisbt/api/soap/mantisconnect.php"/>
   </port>
 </service>
 </definitions>

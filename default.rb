@@ -165,6 +165,7 @@ end
 #   notes - IssueNoteDataArray
 #   custom_fields - CustomFieldValueForIssueDataArray
 #   due_date - SOAP::SOAPDateTime
+#   monitors - AccountDataArray
 class IssueData
   attr_accessor :id
   attr_accessor :view_state
@@ -198,8 +199,9 @@ class IssueData
   attr_accessor :notes
   attr_accessor :custom_fields
   attr_accessor :due_date
+  attr_accessor :monitors
 
-  def initialize(id = nil, view_state = nil, last_updated = nil, project = nil, category = nil, priority = nil, severity = nil, status = nil, reporter = nil, summary = nil, version = nil, build = nil, platform = nil, os = nil, os_build = nil, reproducibility = nil, date_submitted = nil, sponsorship_total = nil, handler = nil, projection = nil, eta = nil, resolution = nil, fixed_in_version = nil, target_version = nil, description = nil, steps_to_reproduce = nil, additional_information = nil, attachments = nil, relationships = nil, notes = nil, custom_fields = nil, due_date = nil)
+  def initialize(id = nil, view_state = nil, last_updated = nil, project = nil, category = nil, priority = nil, severity = nil, status = nil, reporter = nil, summary = nil, version = nil, build = nil, platform = nil, os = nil, os_build = nil, reproducibility = nil, date_submitted = nil, sponsorship_total = nil, handler = nil, projection = nil, eta = nil, resolution = nil, fixed_in_version = nil, target_version = nil, description = nil, steps_to_reproduce = nil, additional_information = nil, attachments = nil, relationships = nil, notes = nil, custom_fields = nil, due_date = nil, monitors = nil)
     @id = id
     @view_state = view_state
     @last_updated = last_updated
@@ -232,6 +234,7 @@ class IssueData
     @notes = notes
     @custom_fields = custom_fields
     @due_date = due_date
+    @monitors = monitors
   end
 end
 
@@ -353,6 +356,7 @@ end
 #   is_public - SOAP::SOAPBoolean
 #   name - SOAP::SOAPString
 #   filter_string - SOAP::SOAPString
+#   url - SOAP::SOAPString
 class FilterData
   attr_accessor :id
   attr_accessor :owner
@@ -360,14 +364,16 @@ class FilterData
   attr_accessor :is_public
   attr_accessor :name
   attr_accessor :filter_string
+  attr_accessor :url
 
-  def initialize(id = nil, owner = nil, project_id = nil, is_public = nil, name = nil, filter_string = nil)
+  def initialize(id = nil, owner = nil, project_id = nil, is_public = nil, name = nil, filter_string = nil, url = nil)
     @id = id
     @owner = owner
     @project_id = project_id
     @is_public = is_public
     @name = name
     @filter_string = filter_string
+    @url = url
   end
 end
 
