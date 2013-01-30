@@ -40,6 +40,16 @@ module DefaultMappingRegistry
     ]
   )
 
+  EncodedRegistry.register(
+    :class => UserData,
+    :schema_type => XSD::QName.new(NsMantisconnect, "UserData"),
+    :schema_element => [
+      ["account_data", ["AccountData", XSD::QName.new(nil, "account_data")], [0, 1]],
+      ["access_level", ["SOAP::SOAPInteger", XSD::QName.new(nil, "access_level")], [0, 1]],
+      ["timezone", ["SOAP::SOAPString", XSD::QName.new(nil, "timezone")], [0, 1]]
+    ]
+  )
+
   EncodedRegistry.set(
     AccountDataArray,
     ::SOAP::SOAPArray,
@@ -56,7 +66,8 @@ module DefaultMappingRegistry
       ["size", ["SOAP::SOAPInteger", XSD::QName.new(nil, "size")], [0, 1]],
       ["content_type", ["SOAP::SOAPString", XSD::QName.new(nil, "content_type")], [0, 1]],
       ["date_submitted", ["SOAP::SOAPDateTime", XSD::QName.new(nil, "date_submitted")], [0, 1]],
-      ["download_url", ["SOAP::SOAPAnyURI", XSD::QName.new(nil, "download_url")], [0, 1]]
+      ["download_url", ["SOAP::SOAPAnyURI", XSD::QName.new(nil, "download_url")], [0, 1]],
+      ["user_id", ["SOAP::SOAPInteger", XSD::QName.new(nil, "user_id")], [0, 1]]
     ]
   )
 
@@ -78,7 +89,8 @@ module DefaultMappingRegistry
       ["size", ["SOAP::SOAPInteger", XSD::QName.new(nil, "size")], [0, 1]],
       ["content_type", ["SOAP::SOAPString", XSD::QName.new(nil, "content_type")], [0, 1]],
       ["date_submitted", ["SOAP::SOAPDateTime", XSD::QName.new(nil, "date_submitted")], [0, 1]],
-      ["download_url", ["SOAP::SOAPAnyURI", XSD::QName.new(nil, "download_url")], [0, 1]]
+      ["download_url", ["SOAP::SOAPAnyURI", XSD::QName.new(nil, "download_url")], [0, 1]],
+      ["user_id", ["SOAP::SOAPInteger", XSD::QName.new(nil, "user_id")], [0, 1]]
     ]
   )
 
@@ -116,7 +128,9 @@ module DefaultMappingRegistry
       ["view_state", ["ObjectRef", XSD::QName.new(nil, "view_state")], [0, 1]],
       ["date_submitted", ["SOAP::SOAPDateTime", XSD::QName.new(nil, "date_submitted")], [0, 1]],
       ["last_modified", ["SOAP::SOAPDateTime", XSD::QName.new(nil, "last_modified")], [0, 1]],
-      ["time_tracking", ["SOAP::SOAPInteger", XSD::QName.new(nil, "time_tracking")], [0, 1]]
+      ["time_tracking", ["SOAP::SOAPInteger", XSD::QName.new(nil, "time_tracking")], [0, 1]],
+      ["note_type", ["SOAP::SOAPInteger", XSD::QName.new(nil, "note_type")], [0, 1]],
+      ["note_attr", ["SOAP::SOAPString", XSD::QName.new(nil, "note_attr")], [0, 1]]
     ]
   )
 
@@ -163,7 +177,9 @@ module DefaultMappingRegistry
       ["notes", ["IssueNoteDataArray", XSD::QName.new(nil, "notes")], [0, 1]],
       ["custom_fields", ["CustomFieldValueForIssueDataArray", XSD::QName.new(nil, "custom_fields")], [0, 1]],
       ["due_date", ["SOAP::SOAPDateTime", XSD::QName.new(nil, "due_date")], [0, 1]],
-      ["monitors", ["AccountDataArray", XSD::QName.new(nil, "monitors")], [0, 1]]
+      ["monitors", ["AccountDataArray", XSD::QName.new(nil, "monitors")], [0, 1]],
+      ["sticky", ["SOAP::SOAPBoolean", XSD::QName.new(nil, "sticky")], [0, 1]],
+      ["tags", ["ObjectRefArray", XSD::QName.new(nil, "tags")], [0, 1]]
     ]
   )
 
@@ -235,7 +251,8 @@ module DefaultMappingRegistry
       ["project_id", ["SOAP::SOAPInteger", XSD::QName.new(nil, "project_id")], [0, 1]],
       ["date_order", ["SOAP::SOAPDateTime", XSD::QName.new(nil, "date_order")], [0, 1]],
       ["description", ["SOAP::SOAPString", XSD::QName.new(nil, "description")], [0, 1]],
-      ["released", ["SOAP::SOAPBoolean", XSD::QName.new(nil, "released")], [0, 1]]
+      ["released", ["SOAP::SOAPBoolean", XSD::QName.new(nil, "released")], [0, 1]],
+      ["obsolete", ["SOAP::SOAPBoolean", XSD::QName.new(nil, "obsolete")], [0, 1]]
     ]
   )
 
@@ -331,6 +348,64 @@ module DefaultMappingRegistry
     { :type => XSD::QName.new(NsMantisconnect, "CustomFieldValueForIssueData") }
   )
 
+  EncodedRegistry.register(
+    :class => TagData,
+    :schema_type => XSD::QName.new(NsMantisconnect, "TagData"),
+    :schema_element => [
+      ["id", ["SOAP::SOAPInteger", XSD::QName.new(nil, "id")], [0, 1]],
+      ["user_id", ["AccountData", XSD::QName.new(nil, "user_id")], [0, 1]],
+      ["name", ["SOAP::SOAPString", XSD::QName.new(nil, "name")], [0, 1]],
+      ["description", ["SOAP::SOAPString", XSD::QName.new(nil, "description")], [0, 1]],
+      ["date_created", ["SOAP::SOAPDateTime", XSD::QName.new(nil, "date_created")], [0, 1]],
+      ["date_updated", ["SOAP::SOAPDateTime", XSD::QName.new(nil, "date_updated")], [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.set(
+    TagDataArray,
+    ::SOAP::SOAPArray,
+    ::SOAP::Mapping::EncodedRegistry::TypedArrayFactory,
+    { :type => XSD::QName.new(NsMantisconnect, "TagData") }
+  )
+
+  EncodedRegistry.register(
+    :class => TagDataSearchResult,
+    :schema_type => XSD::QName.new(NsMantisconnect, "TagDataSearchResult"),
+    :schema_element => [
+      ["results", ["TagDataArray", XSD::QName.new(nil, "results")], [0, 1]],
+      ["total_results", ["SOAP::SOAPInteger", XSD::QName.new(nil, "total_results")], [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => ProfileData,
+    :schema_type => XSD::QName.new(NsMantisconnect, "ProfileData"),
+    :schema_element => [
+      ["id", ["SOAP::SOAPInteger", XSD::QName.new(nil, "id")], [0, 1]],
+      ["user_id", ["AccountData", XSD::QName.new(nil, "user_id")], [0, 1]],
+      ["platform", ["SOAP::SOAPString", XSD::QName.new(nil, "platform")], [0, 1]],
+      ["os", ["SOAP::SOAPString", XSD::QName.new(nil, "os")], [0, 1]],
+      ["os_build", ["SOAP::SOAPString", XSD::QName.new(nil, "os_build")], [0, 1]],
+      ["description", ["SOAP::SOAPString", XSD::QName.new(nil, "description")], [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.set(
+    ProfileDataArray,
+    ::SOAP::SOAPArray,
+    ::SOAP::Mapping::EncodedRegistry::TypedArrayFactory,
+    { :type => XSD::QName.new(NsMantisconnect, "ProfileData") }
+  )
+
+  EncodedRegistry.register(
+    :class => ProfileDataSearchResult,
+    :schema_type => XSD::QName.new(NsMantisconnect, "ProfileDataSearchResult"),
+    :schema_element => [
+      ["results", ["ProfileDataArray", XSD::QName.new(nil, "results")], [0, 1]],
+      ["total_results", ["SOAP::SOAPInteger", XSD::QName.new(nil, "total_results")], [0, 1]]
+    ]
+  )
+
   LiteralRegistry.register(
     :class => ObjectRef,
     :schema_type => XSD::QName.new(NsMantisconnect, "ObjectRef"),
@@ -352,6 +427,16 @@ module DefaultMappingRegistry
   )
 
   LiteralRegistry.register(
+    :class => UserData,
+    :schema_type => XSD::QName.new(NsMantisconnect, "UserData"),
+    :schema_element => [
+      ["account_data", ["AccountData", XSD::QName.new(nil, "account_data")], [0, 1]],
+      ["access_level", ["SOAP::SOAPInteger", XSD::QName.new(nil, "access_level")], [0, 1]],
+      ["timezone", ["SOAP::SOAPString", XSD::QName.new(nil, "timezone")], [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
     :class => AttachmentData,
     :schema_type => XSD::QName.new(NsMantisconnect, "AttachmentData"),
     :schema_element => [
@@ -360,7 +445,8 @@ module DefaultMappingRegistry
       ["size", ["SOAP::SOAPInteger", XSD::QName.new(nil, "size")], [0, 1]],
       ["content_type", ["SOAP::SOAPString", XSD::QName.new(nil, "content_type")], [0, 1]],
       ["date_submitted", ["SOAP::SOAPDateTime", XSD::QName.new(nil, "date_submitted")], [0, 1]],
-      ["download_url", ["SOAP::SOAPAnyURI", XSD::QName.new(nil, "download_url")], [0, 1]]
+      ["download_url", ["SOAP::SOAPAnyURI", XSD::QName.new(nil, "download_url")], [0, 1]],
+      ["user_id", ["SOAP::SOAPInteger", XSD::QName.new(nil, "user_id")], [0, 1]]
     ]
   )
 
@@ -375,7 +461,8 @@ module DefaultMappingRegistry
       ["size", ["SOAP::SOAPInteger", XSD::QName.new(nil, "size")], [0, 1]],
       ["content_type", ["SOAP::SOAPString", XSD::QName.new(nil, "content_type")], [0, 1]],
       ["date_submitted", ["SOAP::SOAPDateTime", XSD::QName.new(nil, "date_submitted")], [0, 1]],
-      ["download_url", ["SOAP::SOAPAnyURI", XSD::QName.new(nil, "download_url")], [0, 1]]
+      ["download_url", ["SOAP::SOAPAnyURI", XSD::QName.new(nil, "download_url")], [0, 1]],
+      ["user_id", ["SOAP::SOAPInteger", XSD::QName.new(nil, "user_id")], [0, 1]]
     ]
   )
 
@@ -399,7 +486,9 @@ module DefaultMappingRegistry
       ["view_state", ["ObjectRef", XSD::QName.new(nil, "view_state")], [0, 1]],
       ["date_submitted", ["SOAP::SOAPDateTime", XSD::QName.new(nil, "date_submitted")], [0, 1]],
       ["last_modified", ["SOAP::SOAPDateTime", XSD::QName.new(nil, "last_modified")], [0, 1]],
-      ["time_tracking", ["SOAP::SOAPInteger", XSD::QName.new(nil, "time_tracking")], [0, 1]]
+      ["time_tracking", ["SOAP::SOAPInteger", XSD::QName.new(nil, "time_tracking")], [0, 1]],
+      ["note_type", ["SOAP::SOAPInteger", XSD::QName.new(nil, "note_type")], [0, 1]],
+      ["note_attr", ["SOAP::SOAPString", XSD::QName.new(nil, "note_attr")], [0, 1]]
     ]
   )
 
@@ -439,7 +528,9 @@ module DefaultMappingRegistry
       ["notes", ["IssueNoteDataArray", XSD::QName.new(nil, "notes")], [0, 1]],
       ["custom_fields", ["CustomFieldValueForIssueDataArray", XSD::QName.new(nil, "custom_fields")], [0, 1]],
       ["due_date", ["SOAP::SOAPDateTime", XSD::QName.new(nil, "due_date")], [0, 1]],
-      ["monitors", ["AccountDataArray", XSD::QName.new(nil, "monitors")], [0, 1]]
+      ["monitors", ["AccountDataArray", XSD::QName.new(nil, "monitors")], [0, 1]],
+      ["sticky", ["SOAP::SOAPBoolean", XSD::QName.new(nil, "sticky")], [0, 1]],
+      ["tags", ["ObjectRefArray", XSD::QName.new(nil, "tags")], [0, 1]]
     ]
   )
 
@@ -490,7 +581,8 @@ module DefaultMappingRegistry
       ["project_id", ["SOAP::SOAPInteger", XSD::QName.new(nil, "project_id")], [0, 1]],
       ["date_order", ["SOAP::SOAPDateTime", XSD::QName.new(nil, "date_order")], [0, 1]],
       ["description", ["SOAP::SOAPString", XSD::QName.new(nil, "description")], [0, 1]],
-      ["released", ["SOAP::SOAPBoolean", XSD::QName.new(nil, "released")], [0, 1]]
+      ["released", ["SOAP::SOAPBoolean", XSD::QName.new(nil, "released")], [0, 1]],
+      ["obsolete", ["SOAP::SOAPBoolean", XSD::QName.new(nil, "obsolete")], [0, 1]]
     ]
   )
 
@@ -551,4 +643,47 @@ module DefaultMappingRegistry
     ]
   )
 
+  LiteralRegistry.register(
+    :class => TagData,
+    :schema_type => XSD::QName.new(NsMantisconnect, "TagData"),
+    :schema_element => [
+      ["id", ["SOAP::SOAPInteger", XSD::QName.new(nil, "id")], [0, 1]],
+      ["user_id", ["AccountData", XSD::QName.new(nil, "user_id")], [0, 1]],
+      ["name", ["SOAP::SOAPString", XSD::QName.new(nil, "name")], [0, 1]],
+      ["description", ["SOAP::SOAPString", XSD::QName.new(nil, "description")], [0, 1]],
+      ["date_created", ["SOAP::SOAPDateTime", XSD::QName.new(nil, "date_created")], [0, 1]],
+      ["date_updated", ["SOAP::SOAPDateTime", XSD::QName.new(nil, "date_updated")], [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => TagDataSearchResult,
+    :schema_type => XSD::QName.new(NsMantisconnect, "TagDataSearchResult"),
+    :schema_element => [
+      ["results", ["TagDataArray", XSD::QName.new(nil, "results")], [0, 1]],
+      ["total_results", ["SOAP::SOAPInteger", XSD::QName.new(nil, "total_results")], [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => ProfileData,
+    :schema_type => XSD::QName.new(NsMantisconnect, "ProfileData"),
+    :schema_element => [
+      ["id", ["SOAP::SOAPInteger", XSD::QName.new(nil, "id")], [0, 1]],
+      ["user_id", ["AccountData", XSD::QName.new(nil, "user_id")], [0, 1]],
+      ["platform", ["SOAP::SOAPString", XSD::QName.new(nil, "platform")], [0, 1]],
+      ["os", ["SOAP::SOAPString", XSD::QName.new(nil, "os")], [0, 1]],
+      ["os_build", ["SOAP::SOAPString", XSD::QName.new(nil, "os_build")], [0, 1]],
+      ["description", ["SOAP::SOAPString", XSD::QName.new(nil, "description")], [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => ProfileDataSearchResult,
+    :schema_type => XSD::QName.new(NsMantisconnect, "ProfileDataSearchResult"),
+    :schema_element => [
+      ["results", ["ProfileDataArray", XSD::QName.new(nil, "results")], [0, 1]],
+      ["total_results", ["SOAP::SOAPInteger", XSD::QName.new(nil, "total_results")], [0, 1]]
+    ]
+  )
 end

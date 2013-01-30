@@ -32,6 +32,22 @@ class AccountData
   end
 end
 
+# {http://futureware.biz/mantisconnect}UserData
+#   account_data - AccountData
+#   access_level - SOAP::SOAPInteger
+#   timezone - SOAP::SOAPString
+class UserData
+  attr_accessor :account_data
+  attr_accessor :access_level
+  attr_accessor :timezone
+
+  def initialize(account_data = nil, access_level = nil, timezone = nil)
+    @account_data = account_data
+    @access_level = access_level
+    @timezone = timezone
+  end
+end
+
 # {http://futureware.biz/mantisconnect}AttachmentData
 #   id - SOAP::SOAPInteger
 #   filename - SOAP::SOAPString
@@ -39,6 +55,7 @@ end
 #   content_type - SOAP::SOAPString
 #   date_submitted - SOAP::SOAPDateTime
 #   download_url - SOAP::SOAPAnyURI
+#   user_id - SOAP::SOAPInteger
 class AttachmentData
   attr_accessor :id
   attr_accessor :filename
@@ -46,14 +63,16 @@ class AttachmentData
   attr_accessor :content_type
   attr_accessor :date_submitted
   attr_accessor :download_url
+  attr_accessor :user_id
 
-  def initialize(id = nil, filename = nil, size = nil, content_type = nil, date_submitted = nil, download_url = nil)
+  def initialize(id = nil, filename = nil, size = nil, content_type = nil, date_submitted = nil, download_url = nil, user_id = nil)
     @id = id
     @filename = filename
     @size = size
     @content_type = content_type
     @date_submitted = date_submitted
     @download_url = download_url
+    @user_id = user_id
   end
 end
 
@@ -66,6 +85,7 @@ end
 #   content_type - SOAP::SOAPString
 #   date_submitted - SOAP::SOAPDateTime
 #   download_url - SOAP::SOAPAnyURI
+#   user_id - SOAP::SOAPInteger
 class ProjectAttachmentData
   attr_accessor :id
   attr_accessor :filename
@@ -75,8 +95,9 @@ class ProjectAttachmentData
   attr_accessor :content_type
   attr_accessor :date_submitted
   attr_accessor :download_url
+  attr_accessor :user_id
 
-  def initialize(id = nil, filename = nil, title = nil, description = nil, size = nil, content_type = nil, date_submitted = nil, download_url = nil)
+  def initialize(id = nil, filename = nil, title = nil, description = nil, size = nil, content_type = nil, date_submitted = nil, download_url = nil, user_id = nil)
     @id = id
     @filename = filename
     @title = title
@@ -85,6 +106,7 @@ class ProjectAttachmentData
     @content_type = content_type
     @date_submitted = date_submitted
     @download_url = download_url
+    @user_id = user_id
   end
 end
 
@@ -112,6 +134,8 @@ end
 #   date_submitted - SOAP::SOAPDateTime
 #   last_modified - SOAP::SOAPDateTime
 #   time_tracking - SOAP::SOAPInteger
+#   note_type - SOAP::SOAPInteger
+#   note_attr - SOAP::SOAPString
 class IssueNoteData
   attr_accessor :id
   attr_accessor :reporter
@@ -120,8 +144,10 @@ class IssueNoteData
   attr_accessor :date_submitted
   attr_accessor :last_modified
   attr_accessor :time_tracking
+  attr_accessor :note_type
+  attr_accessor :note_attr
 
-  def initialize(id = nil, reporter = nil, text = nil, view_state = nil, date_submitted = nil, last_modified = nil, time_tracking = nil)
+  def initialize(id = nil, reporter = nil, text = nil, view_state = nil, date_submitted = nil, last_modified = nil, time_tracking = nil, note_type = nil, note_attr = nil)
     @id = id
     @reporter = reporter
     @text = text
@@ -129,6 +155,8 @@ class IssueNoteData
     @date_submitted = date_submitted
     @last_modified = last_modified
     @time_tracking = time_tracking
+    @note_type = note_type
+    @note_attr = note_attr
   end
 end
 
@@ -166,6 +194,8 @@ end
 #   custom_fields - CustomFieldValueForIssueDataArray
 #   due_date - SOAP::SOAPDateTime
 #   monitors - AccountDataArray
+#   sticky - SOAP::SOAPBoolean
+#   tags - ObjectRefArray
 class IssueData
   attr_accessor :id
   attr_accessor :view_state
@@ -200,8 +230,10 @@ class IssueData
   attr_accessor :custom_fields
   attr_accessor :due_date
   attr_accessor :monitors
+  attr_accessor :sticky
+  attr_accessor :tags
 
-  def initialize(id = nil, view_state = nil, last_updated = nil, project = nil, category = nil, priority = nil, severity = nil, status = nil, reporter = nil, summary = nil, version = nil, build = nil, platform = nil, os = nil, os_build = nil, reproducibility = nil, date_submitted = nil, sponsorship_total = nil, handler = nil, projection = nil, eta = nil, resolution = nil, fixed_in_version = nil, target_version = nil, description = nil, steps_to_reproduce = nil, additional_information = nil, attachments = nil, relationships = nil, notes = nil, custom_fields = nil, due_date = nil, monitors = nil)
+  def initialize(id = nil, view_state = nil, last_updated = nil, project = nil, category = nil, priority = nil, severity = nil, status = nil, reporter = nil, summary = nil, version = nil, build = nil, platform = nil, os = nil, os_build = nil, reproducibility = nil, date_submitted = nil, sponsorship_total = nil, handler = nil, projection = nil, eta = nil, resolution = nil, fixed_in_version = nil, target_version = nil, description = nil, steps_to_reproduce = nil, additional_information = nil, attachments = nil, relationships = nil, notes = nil, custom_fields = nil, due_date = nil, monitors = nil, sticky = nil, tags = nil)
     @id = id
     @view_state = view_state
     @last_updated = last_updated
@@ -235,6 +267,8 @@ class IssueData
     @custom_fields = custom_fields
     @due_date = due_date
     @monitors = monitors
+    @sticky = sticky
+    @tags = tags
   end
 end
 
@@ -331,6 +365,7 @@ end
 #   date_order - SOAP::SOAPDateTime
 #   description - SOAP::SOAPString
 #   released - SOAP::SOAPBoolean
+#   obsolete - SOAP::SOAPBoolean
 class ProjectVersionData
   attr_accessor :id
   attr_accessor :name
@@ -338,14 +373,16 @@ class ProjectVersionData
   attr_accessor :date_order
   attr_accessor :description
   attr_accessor :released
+  attr_accessor :obsolete
 
-  def initialize(id = nil, name = nil, project_id = nil, date_order = nil, description = nil, released = nil)
+  def initialize(id = nil, name = nil, project_id = nil, date_order = nil, description = nil, released = nil, obsolete = nil)
     @id = id
     @name = name
     @project_id = project_id
     @date_order = date_order
     @description = description
     @released = released
+    @obsolete = obsolete
   end
 end
 
@@ -464,6 +501,82 @@ class CustomFieldValueForIssueData
   end
 end
 
+# {http://futureware.biz/mantisconnect}TagData
+#   id - SOAP::SOAPInteger
+#   user_id - AccountData
+#   name - SOAP::SOAPString
+#   description - SOAP::SOAPString
+#   date_created - SOAP::SOAPDateTime
+#   date_updated - SOAP::SOAPDateTime
+class TagData
+  attr_accessor :id
+  attr_accessor :user_id
+  attr_accessor :name
+  attr_accessor :description
+  attr_accessor :date_created
+  attr_accessor :date_updated
+
+  def initialize(id = nil, user_id = nil, name = nil, description = nil, date_created = nil, date_updated = nil)
+    @id = id
+    @user_id = user_id
+    @name = name
+    @description = description
+    @date_created = date_created
+    @date_updated = date_updated
+  end
+end
+
+# {http://futureware.biz/mantisconnect}TagDataSearchResult
+#   results - TagDataArray
+#   total_results - SOAP::SOAPInteger
+class TagDataSearchResult
+  attr_accessor :results
+  attr_accessor :total_results
+
+  def initialize(results = nil, total_results = nil)
+    @results = results
+    @total_results = total_results
+  end
+end
+
+# {http://futureware.biz/mantisconnect}ProfileData
+#   id - SOAP::SOAPInteger
+#   user_id - AccountData
+#   platform - SOAP::SOAPString
+#   os - SOAP::SOAPString
+#   os_build - SOAP::SOAPString
+#   description - SOAP::SOAPString
+class ProfileData
+  attr_accessor :id
+  attr_accessor :user_id
+  attr_accessor :platform
+  attr_accessor :os
+  attr_accessor :os_build
+  attr_accessor :description
+
+  def initialize(id = nil, user_id = nil, platform = nil, os = nil, os_build = nil, description = nil)
+    @id = id
+    @user_id = user_id
+    @platform = platform
+    @os = os
+    @os_build = os_build
+    @description = description
+  end
+end
+
+# {http://futureware.biz/mantisconnect}ProfileDataSearchResult
+#   results - ProfileDataArray
+#   total_results - SOAP::SOAPInteger
+class ProfileDataSearchResult
+  attr_accessor :results
+  attr_accessor :total_results
+
+  def initialize(results = nil, total_results = nil)
+    @results = results
+    @total_results = total_results
+  end
+end
+
 # {http://futureware.biz/mantisconnect}StringArray
 class StringArray < ::Array
 end
@@ -522,4 +635,12 @@ end
 
 # {http://futureware.biz/mantisconnect}CustomFieldValueForIssueDataArray
 class CustomFieldValueForIssueDataArray < ::Array
+end
+
+# {http://futureware.biz/mantisconnect}TagDataArray
+class TagDataArray < ::Array
+end
+
+# {http://futureware.biz/mantisconnect}ProfileDataArray
+class ProfileDataArray < ::Array
 end

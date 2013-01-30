@@ -20,6 +20,19 @@ obj.wiredump_dev = STDERR if $DEBUG
 puts obj.mc_version
 
 # SYNOPSIS
+#   mc_login(username, password)
+#
+# ARGS
+#   username        C_String - {http://www.w3.org/2001/XMLSchema}string
+#   password        C_String - {http://www.w3.org/2001/XMLSchema}string
+#
+# RETURNS
+#   v_return        UserData - {http://futureware.biz/mantisconnect}UserData
+#
+username = password = nil
+puts obj.mc_login(username, password)
+
+# SYNOPSIS
 #   mc_enum_status(username, password)
 #
 # ARGS
@@ -275,6 +288,21 @@ username = password = issueId = issue = nil
 puts obj.mc_issue_update(username, password, issueId, issue)
 
 # SYNOPSIS
+#   mc_issue_set_tags(username, password, issue_id, tags)
+#
+# ARGS
+#   username        C_String - {http://www.w3.org/2001/XMLSchema}string
+#   password        C_String - {http://www.w3.org/2001/XMLSchema}string
+#   issue_id        C_Integer - {http://www.w3.org/2001/XMLSchema}integer
+#   tags            TagDataArray - {http://futureware.biz/mantisconnect}TagDataArray
+#
+# RETURNS
+#   v_return        Boolean - {http://www.w3.org/2001/XMLSchema}boolean
+#
+username = password = issue_id = tags = nil
+puts obj.mc_issue_set_tags(username, password, issue_id, tags)
+
+# SYNOPSIS
 #   mc_issue_delete(username, password, issue_id)
 #
 # ARGS
@@ -316,6 +344,20 @@ puts obj.mc_issue_note_add(username, password, issue_id, note)
 #
 username = password = issue_note_id = nil
 puts obj.mc_issue_note_delete(username, password, issue_note_id)
+
+# SYNOPSIS
+#   mc_issue_note_update(username, password, note)
+#
+# ARGS
+#   username        C_String - {http://www.w3.org/2001/XMLSchema}string
+#   password        C_String - {http://www.w3.org/2001/XMLSchema}string
+#   note            IssueNoteData - {http://futureware.biz/mantisconnect}IssueNoteData
+#
+# RETURNS
+#   v_return        Boolean - {http://www.w3.org/2001/XMLSchema}boolean
+#
+username = password = note = nil
+puts obj.mc_issue_note_update(username, password, note)
 
 # SYNOPSIS
 #   mc_issue_relationship_add(username, password, issue_id, relationship)
@@ -821,5 +863,78 @@ puts obj.mc_config_get_string(username, password, config_var)
 #
 username = password = issue_id = comment = fixed = nil
 puts obj.mc_issue_checkin(username, password, issue_id, comment, fixed)
+
+# SYNOPSIS
+#   mc_user_pref_get_pref(username, password, project_id, pref_name)
+#
+# ARGS
+#   username        C_String - {http://www.w3.org/2001/XMLSchema}string
+#   password        C_String - {http://www.w3.org/2001/XMLSchema}string
+#   project_id      C_Integer - {http://www.w3.org/2001/XMLSchema}integer
+#   pref_name       C_String - {http://www.w3.org/2001/XMLSchema}string
+#
+# RETURNS
+#   v_return        C_String - {http://www.w3.org/2001/XMLSchema}string
+#
+username = password = project_id = pref_name = nil
+puts obj.mc_user_pref_get_pref(username, password, project_id, pref_name)
+
+# SYNOPSIS
+#   mc_user_profiles_get_all(username, password, page_number, per_page)
+#
+# ARGS
+#   username        C_String - {http://www.w3.org/2001/XMLSchema}string
+#   password        C_String - {http://www.w3.org/2001/XMLSchema}string
+#   page_number     C_Integer - {http://www.w3.org/2001/XMLSchema}integer
+#   per_page        C_Integer - {http://www.w3.org/2001/XMLSchema}integer
+#
+# RETURNS
+#   v_return        ProfileDataSearchResult - {http://futureware.biz/mantisconnect}ProfileDataSearchResult
+#
+username = password = page_number = per_page = nil
+puts obj.mc_user_profiles_get_all(username, password, page_number, per_page)
+
+# SYNOPSIS
+#   mc_tag_get_all(username, password, page_number, per_page)
+#
+# ARGS
+#   username        C_String - {http://www.w3.org/2001/XMLSchema}string
+#   password        C_String - {http://www.w3.org/2001/XMLSchema}string
+#   page_number     C_Integer - {http://www.w3.org/2001/XMLSchema}integer
+#   per_page        C_Integer - {http://www.w3.org/2001/XMLSchema}integer
+#
+# RETURNS
+#   v_return        TagDataSearchResult - {http://futureware.biz/mantisconnect}TagDataSearchResult
+#
+username = password = page_number = per_page = nil
+puts obj.mc_tag_get_all(username, password, page_number, per_page)
+
+# SYNOPSIS
+#   mc_tag_add(username, password, tag)
+#
+# ARGS
+#   username        C_String - {http://www.w3.org/2001/XMLSchema}string
+#   password        C_String - {http://www.w3.org/2001/XMLSchema}string
+#   tag             TagData - {http://futureware.biz/mantisconnect}TagData
+#
+# RETURNS
+#   v_return        C_Integer - {http://www.w3.org/2001/XMLSchema}integer
+#
+username = password = tag = nil
+puts obj.mc_tag_add(username, password, tag)
+
+# SYNOPSIS
+#   mc_tag_delete(username, password, tag_id)
+#
+# ARGS
+#   username        C_String - {http://www.w3.org/2001/XMLSchema}string
+#   password        C_String - {http://www.w3.org/2001/XMLSchema}string
+#   tag_id          C_Integer - {http://www.w3.org/2001/XMLSchema}integer
+#
+# RETURNS
+#   v_return        Boolean - {http://www.w3.org/2001/XMLSchema}boolean
+#
+username = password = tag_id = nil
+puts obj.mc_tag_delete(username, password, tag_id)
 
 
