@@ -10,24 +10,20 @@ require 'pp'
 class CmdLine < OptionParser
     attr_reader :options
 
-    def initialize
+    def initialize(args)
         super
         @options = OpenStruct.new
         @options.url = ""
-        @options.ext = ".out.srt"
         @options.user = ""
         @options.pass = ""
         @options.debug = false
         @options.type = nil
         @options.codepage = "cp1251"
 
-        banner = "Usage: host-runner.rb [options]"
+		separator ""
 
-        separator ""
-        separator "Options:"
-
-        parseargs(ARGV)
-        parse!(ARGV)
+        init
+        parse!(args)
         validate
     end
 
@@ -36,7 +32,7 @@ class CmdLine < OptionParser
         @options.password = @options.user
     end
 
-    def parseargs(args)
+    def init
         # Mandatory argument.
         on("-s", "--server URL",
                 "Issue tracker API") do |s|
@@ -91,7 +87,7 @@ class CmdLine < OptionParser
             exit
         end
 
-    end  # parseargs()
+    end  # init()
 
     def validate
         raise "Issue tracker URL is not defined!" if @options.url.empty?
@@ -251,7 +247,7 @@ class Mantis
     end
 end
 
-cmdLine = CmdLine.new
+cmdLine = CmdLine.new(ARGV.dup)
 mantis = Mantis.new(cmdLine)
 mantis.list_tasks
 mantis.run_tasks
