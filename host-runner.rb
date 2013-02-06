@@ -138,19 +138,16 @@ end
 
 class Mantis
     SUPPORTED_API_VERSION = '1.2.3'
-    attr_reader :resolved, :fixed, :debug, :codepage
+    attr_reader :resolved, :fixed, :opts
     
     def initialize(cmdLine)
-        @obj = MantisConnectPortType.new(cmdLine.options.url)
-        @user = cmdLine.options.user
-        @pass = cmdLine.options.password
-        @debug = cmdLine.options.debug
-        @codepage = cmdLine.options.codepage
+		@opts = cmdLine.options
+        @obj = MantisConnectPortType.new(@opts.url)
 
         @obj.wiredump_dev = STDERR if $DEBUG
         
         check_version
-        puts "Username #{@user}..." if @debug
+        puts "Username #{@opts.user}..." if @opts.debug
         get_status_resolved
         get_resolution_resolved
         get_runner_project
@@ -167,7 +164,7 @@ class Mantis
     end
 
     def get_status_resolved
-        statuses = @obj.mc_enum_status(@user, @pass)
+        statuses = @obj.mc_enum_status(@opts.user, @opts.password)
         p statuses if $DEBUG
         statuses.each do |s|
             if s.name.casecmp("resolved") == 0
@@ -179,7 +176,7 @@ class Mantis
     end
 
     def get_resolution_resolved
-        resolutions = @obj.mc_enum_resolutions(@user, @pass)
+        resolutions = @obj.mc_enum_resolutions(@opts.user, @opts.password)
         p resolutions if $DEBUG
         resolutions.each do |r|
             if r.name.casecmp("fixed") == 0
@@ -191,14 +188,14 @@ class Mantis
     end
 
     def get_runner_project
-        projects = @obj.mc_projects_get_user_accessible(@user, @pass)
+        projects = @obj.mc_projects_get_user_accessible(@opts.user, @opts.password)
         @prj_id = find_runner_project_id(projects)
     end
 
     def find_runner_project_id(projects)
         projects.each do |p|
             if p.name.casecmp('Runner') == 0
-                puts "Found \"Runner\"! (ID = #{p.id})" if @debug
+                puts "Found \"Runner\"! (ID = #{p.id})" if @opts.debug
                 return p.id
             end
         end
@@ -206,7 +203,7 @@ class Mantis
     end
 
     def get_new_tasks
-        @tasks = @obj.mc_project_get_issues(@user, @pass, @prj_id, nil, nil)
+        @tasks = @obj.mc_project_get_issues(@opts.user, @opts.password, @prj_id, nil, nil)
     end
 
     def list_tasks
@@ -218,7 +215,7 @@ class Mantis
         #p tasks
         tasks.each do |t|
             if t.handler \
-                    && t.handler.name.casecmp(@user) == 0 \
+                    && t.handler.name.casecmp(@opts.user) == 0 \
                     && /open/i.match(t.resolution.name)
                 r << t
             end
@@ -241,9 +238,9 @@ class Mantis
     def save_task(task)
         note = IssueNoteData.new()
         note.text = task.out
-        note.text = Iconv.iconv("UTF-8", @codepage, task.out)
-        @obj.mc_issue_note_add(@user, @pass, task.task.id, note)
-        @obj.mc_issue_update(@user, @pass, task.task.id, task.task)
+        note.text = Iconv.iconv("UTF-8", @opts.codepage, task.out)
+        @obj.mc_issue_note_add(@opts.user, @opts.password, task.task.id, note)
+        @obj.mc_issue_update(@opts.user, @opts.password, task.task.id, task.task)
     end
 end
 
