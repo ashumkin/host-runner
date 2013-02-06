@@ -4,7 +4,6 @@ require 'optparse'
 require 'ostruct'
 cdir = File.dirname(__FILE__)
 require cdir + '/defaultDriver.rb'
-require 'iconv'
 require 'pp'
 
 class CmdLine < OptionParser
@@ -19,6 +18,11 @@ class CmdLine < OptionParser
         @options.debug = false
         @options.type = nil
         @options.codepage = "cp1251"
+		@options.iconvused = false
+		unless /^1\.9/.match(RUBY_VERSION)
+			require 'iconv'
+			@options.iconvused = true
+		end
 
 		separator ""
 
@@ -107,7 +111,12 @@ class MantisTask
     def run
         @cmd = @task.summary.to_s
         @cmd += ' ' + @task.description.to_s
-        @cmd = Iconv.iconv(@parent.codepage, "UTF-8", @cmd)[0]
+		if @parent.opts.iconvused
+			# Iconv must already be loaded in check_login
+			@cmd = Iconv.iconv(@parent.opts.codepage, 'UTF-8', @cmd)[0]
+		else
+			@cmd.encode!('UTF-8', @parent.opts.codepage)
+		end
         if @cmd[0,1] == "@"
             puts "multicommand!"
             @cmd = @cmd[1,@cmd.length]
@@ -238,7 +247,11 @@ class Mantis
     def save_task(task)
         note = IssueNoteData.new()
         note.text = task.out
-        note.text = Iconv.iconv("UTF-8", @opts.codepage, task.out)
+		if @opts.iconvused
+			note.text = Iconv.iconv("UTF-8", @opts.codepage, task.out)
+		else
+			note.text.encode!('UTF-8', @opts.codepage)
+		end
         @obj.mc_issue_note_add(@opts.user, @opts.password, task.task.id, note)
         @obj.mc_issue_update(@opts.user, @opts.password, task.task.id, task.task)
     end
