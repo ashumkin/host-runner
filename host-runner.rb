@@ -2,7 +2,8 @@
 
 require 'optparse'
 require 'ostruct'
-require 'defaultDriver.rb'
+cdir = File.dirname(__FILE__)
+require cdir + '/defaultDriver.rb'
 require 'iconv'
 require 'pp'
 
